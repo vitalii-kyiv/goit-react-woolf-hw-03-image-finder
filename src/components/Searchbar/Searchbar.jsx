@@ -1,3 +1,5 @@
+const Searchbar =()=> {
+return (
 <header class="searchbar">
   <form class="form">
     <button type="submit" class="button">
@@ -12,4 +14,7 @@
       placeholder="Search images and photos"
     />
   </form>
-</header>;
+</header>
+)
+}
+export default Searchbar
