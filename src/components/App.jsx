@@ -16,6 +16,7 @@ class App extends Component {
     largeImageURL: '',
     loadMore: false,
   };
+
   async componentDidUpdate(prevProps, prevState) {
     const { query, page } = this.state;
     if (query !== prevState.query || page !== prevState.page) {
@@ -32,6 +33,7 @@ class App extends Component {
     const { page, query } = this.state;
     try {
       const data = await getImagesApi(page, query);
+      console.log(data);
       this.setState(prevState => ({
         images: [...prevState.images, ...data.hits],
         isLoading: false,
