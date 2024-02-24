@@ -3,52 +3,80 @@ import { getImagesApi } from '../api/images';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
 import Searchbar from './Searchbar/Searchbar';
+import Loader from './Loader/Loader';
+import Modal from './Modal/Modal';
+import css from './App.module.css';
 class App extends Component {
   state = {
     images: [],
     page: 1,
-    q: "",
-    loading: false
-    
+    query: '',
+    isLoading: false,
+    showModal: false,
+    largeImageURL: '',
+    loadMore: false,
   };
-  componentDidMount() {
-    this.getImages()
-   
+  componentDidUpdate(prevProps, prevState) {
+    const { query, page } = this.state;
+    if (query !== prevState.query || page !== prevState.page) {
+      this.getImages();
+    }
   }
 
+  handleSearch = query => {
+    this.setState({ query: query, page: 1, images: [] });
+  };
+
   getImages = async () => {
-    const {q, page} = this.state
+    this.setState({ isLoading: true });
+    const { page, query } = this.state;
     try {
-      const data = await getImagesApi(q, page)
-    console.log(data)
-   this.setState({ images: [...this.state.images, ...data.hits] }, () => {
-      console.log('Оновлений стан:', this.state.images);
-    });
+      const data = await getImagesApi(page, query);
+      this.setState(prevState => ({
+        images: [...prevState.images, ...data.hits],
+        isLoading: false,
+        loadMore: this.state.page < Math.ceil(data.totalHits / 12),
+      }));
     } catch (error) {
-      console.log(error)
+      console.error(error.message);
+      this.setState({ isLoading: false });
     }
   };
 
   handleLoadMore = () => {
-  this.setState((prevState) => ({ page: prevState.page + 1 }), this.getImages);
-};
+    if (this.state.images.length > 0) {
+      this.setState(
+        prevState => ({ page: prevState.page + 1 }),
+        this.getImages
+      );
+    }
+  };
+
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({ showModal: !showModal }));
+  };
+
+  handleImageClick = largeImageURL => {
+    this.setState({ largeImageURL });
+    this.toggleModal();
+  };
 
   render() {
     return (
-      <div
-        style={{
-          height: '100vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          fontSize: 40,
-          color: '#010101',
-        }}
-      >
-        <Searchbar/>
-        <ImageGallery images={this.state.images} />
-        <Button handleLoadMore={this.handleLoadMore } />
-        
+      <div className={css.App}>
+        <Searchbar handleSearch={this.handleSearch} query={this.state.query} />
+        <ImageGallery
+          images={this.state.images}
+          onClick={this.handleImageClick}
+        />
+        {this.state.isLoading && <Loader />}
+        {this.state.loadMore && <Button handleLoadMore={this.handleLoadMore} />}
+        {this.state.showModal && (
+          <Modal
+            largeImageURL={this.state.largeImageURL}
+            onClose={this.toggleModal}
+          />
+        )}
       </div>
     );
   }

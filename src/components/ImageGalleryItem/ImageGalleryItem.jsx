@@ -1,7 +1,7 @@
-const ImageGalleryItem = props => {
-  const {src, alt} = props
+import css from "./ImageGalleryItem.module.css"
+const ImageGalleryItem = ({ src, alt, largeImageURL, onClick }) => {
   return (
-    <li className="galleryItem">
+    <li className={css.ImageGalleryItem} onClick={() => onClick(largeImageURL)}>
       <img src={src} alt={alt} />
     </li>
   );

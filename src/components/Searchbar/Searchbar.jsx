@@ -1,20 +1,29 @@
-const Searchbar =()=> {
-return (
-<header class="searchbar">
-  <form class="form">
-    <button type="submit" class="button">
-      <span class="button-label">Search</span>
-    </button>
+import css from './Searchbar.module.css';
 
-    <input
-      class="input"
-      type="text"
-      autocomplete="off"
-      autofocus
-      placeholder="Search images and photos"
-    />
-  </form>
-</header>
-)
-}
-export default Searchbar
+const Searchbar = props => {
+  const { handleSearch } = props;
+  const handleSubmit = evt => {
+    evt.preventDefault();
+    const formQuery = evt.currentTarget.elements.query.value;
+    handleSearch(formQuery);
+  };
+  return (
+    <header className={css.Searchbar}>
+      <form className={css.SearchForm} onSubmit={handleSubmit}>
+        <button type="submit" className={css.SearchFormButton}>
+          <span className={css.SearchFormButtonLabel}>Search</span>
+        </button>
+
+        <input
+          className={css.SearchFormInput}
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          name="query"
+        />
+      </form>
+    </header>
+  );
+};
+export default Searchbar;
