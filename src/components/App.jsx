@@ -16,10 +16,10 @@ class App extends Component {
     largeImageURL: '',
     loadMore: false,
   };
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     const { query, page } = this.state;
     if (query !== prevState.query || page !== prevState.page) {
-      this.getImages();
+      await this.getImages();
     }
   }
 
@@ -44,7 +44,12 @@ class App extends Component {
   };
 
   handleLoadMore = () => {
-    this.setState(prevState => ({ page: prevState.page + 1 }), this.getImages);
+    if (this.state.images.length > 0) {
+      this.setState(
+        prevState => ({ page: prevState.page + 1 }),
+        this.getImages
+      );
+    }
   };
 
   toggleModal = () => {
