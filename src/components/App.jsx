@@ -47,10 +47,7 @@ class App extends Component {
 
   handleLoadMore = () => {
     if (this.state.images.length > 0) {
-      this.setState(
-        prevState => ({ page: prevState.page + 1 }),
-        this.getImages
-      );
+      this.setState(prevState => ({ page: prevState.page + 1 }));
     }
   };
 
