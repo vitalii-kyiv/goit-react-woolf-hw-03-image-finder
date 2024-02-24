@@ -17,10 +17,10 @@ class App extends Component {
     loadMore: false,
   };
 
-  async componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     const { query, page } = this.state;
     if (query !== prevState.query || page !== prevState.page) {
-      await this.getImages();
+      this.getImages();
     }
   }
 
@@ -33,7 +33,6 @@ class App extends Component {
     const { page, query } = this.state;
     try {
       const data = await getImagesApi(page, query);
-      console.log(data);
       this.setState(prevState => ({
         images: [...prevState.images, ...data.hits],
         isLoading: false,
