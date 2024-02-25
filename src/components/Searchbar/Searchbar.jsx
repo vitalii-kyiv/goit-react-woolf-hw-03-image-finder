@@ -1,7 +1,6 @@
 import css from './Searchbar.module.css';
 
-const Searchbar = props => {
-  const { handleSearch } = props;
+const Searchbar = ({ handleSearch }) => {
   const handleSubmit = evt => {
     evt.preventDefault();
     const formQuery = evt.currentTarget.elements.query.value;

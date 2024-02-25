@@ -35,19 +35,17 @@ class App extends Component {
       const data = await getImagesApi(page, query);
       this.setState(prevState => ({
         images: [...prevState.images, ...data.hits],
-        isLoading: false,
         loadMore: this.state.page < Math.ceil(data.totalHits / 12),
       }));
     } catch (error) {
       console.error(error.message);
+    } finally {
       this.setState({ isLoading: false });
     }
   };
 
   handleLoadMore = () => {
-    if (this.state.images.length > 0) {
-      this.setState(prevState => ({ page: prevState.page + 1 }));
-    }
+    this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
   toggleModal = () => {
